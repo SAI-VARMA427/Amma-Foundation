@@ -1,0 +1,1584 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>DATARITE TECH SOFT SOLUTIONS</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+  <style>
+    :root {
+      --teal: #00c9a7;
+      --teal-dark: #00a389;
+      --teal-glow: rgba(0, 201, 167, 0.15);
+      --navy: #0d1117;
+      --navy-mid: #131b25;
+      --navy-card: rgba(19, 27, 37, 0.85);
+      --glass: rgba(255,255,255,0.04);
+      --glass-border: rgba(255,255,255,0.08);
+      --text: #e8edf3;
+      --muted: #7a8a9a;
+      --white: #fff;
+      --danger: #ff4d6d;
+      --section-pad: clamp(40px, 6vw, 80px);
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--navy);
+      color: var(--text);
+      overflow-x: hidden;
+    }
+
+    /* ── BG ── */
+    #bg-video {
+      position: fixed; inset: 0;
+      width: 100%; height: 100%;
+      object-fit: cover;
+      z-index: -2;
+      filter: brightness(0.25) saturate(0.6);
+    }
+
+    .bg-overlay {
+      position: fixed; inset: 0;
+      z-index: -1;
+      background: radial-gradient(ellipse 80% 60% at 20% 40%, rgba(0,201,167,0.08) 0%, transparent 60%),
+                  radial-gradient(ellipse 60% 80% at 80% 80%, rgba(0,80,200,0.07) 0%, transparent 60%),
+                  linear-gradient(160deg, rgba(13,17,23,0.92) 0%, rgba(13,17,23,0.75) 100%);
+    }
+
+    /* ── TYPOGRAPHY ── */
+    h1,h2,h3,h4 { font-family: 'Syne', sans-serif; }
+
+    /* ── NAVBAR ── */
+    .navbar {
+      position: fixed; top: 0; left: 0; right: 0;
+      z-index: 1000;
+      padding: 0;
+      transition: all 0.4s ease;
+    }
+
+    .navbar.scrolled {
+      background: rgba(13,17,23,0.95);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--glass-border);
+      box-shadow: 0 4px 30px rgba(0,0,0,0.5);
+    }
+
+    .nav-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 clamp(16px, 4vw, 40px);
+      height: 72px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      text-decoration: none;
+      flex-shrink: 0;
+    }
+
+    .logo-icon {
+      width: 38px; height: 38px;
+      background: linear-gradient(135deg, var(--teal), #0096ff);
+      border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 18px;
+      box-shadow: 0 0 20px rgba(0,201,167,0.35);
+    }
+
+    .logo-text {
+      font-family: 'Syne', sans-serif;
+      font-weight: 800;
+      font-size: clamp(0.9rem, 2vw, 1.15rem);
+      color: var(--white);
+      line-height: 1.1;
+    }
+
+    .logo-text span { color: var(--teal); }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      list-style: none;
+    }
+
+    .nav-links > li { position: relative; }
+
+    .nav-links a {
+      color: rgba(255,255,255,0.8);
+      text-decoration: none;
+      font-size: 0.88rem;
+      font-weight: 500;
+      padding: 8px 14px;
+      border-radius: 8px;
+      transition: all 0.25s;
+      white-space: nowrap;
+      display: block;
+    }
+
+    .nav-links a:hover { color: var(--teal); background: var(--teal-glow); }
+
+    .nav-cta {
+      background: linear-gradient(135deg, var(--teal), var(--teal-dark)) !important;
+      color: #fff !important;
+      font-weight: 600 !important;
+      padding: 8px 20px !important;
+      box-shadow: 0 0 20px rgba(0,201,167,0.3);
+    }
+
+    .nav-cta:hover { transform: translateY(-1px); box-shadow: 0 0 28px rgba(0,201,167,0.5) !important; }
+
+    /* Dropdown */
+    .dropdown-menu {
+      position: absolute;
+      top: calc(100% + 8px);
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(13,17,23,0.97);
+      border: 1px solid var(--glass-border);
+      border-radius: 12px;
+      padding: 8px;
+      min-width: 180px;
+      list-style: none;
+      opacity: 0; visibility: hidden;
+      transform: translateX(-50%) translateY(-6px);
+      transition: all 0.25s;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.6);
+      backdrop-filter: blur(20px);
+    }
+
+    .dropdown:hover .dropdown-menu {
+      opacity: 1; visibility: visible;
+      transform: translateX(-50%) translateY(0);
+    }
+
+    .dropdown-menu li a {
+      padding: 9px 14px;
+      border-radius: 7px;
+      font-size: 0.85rem;
+    }
+
+    /* Hamburger */
+    .hamburger {
+      display: none;
+      flex-direction: column;
+      gap: 5px;
+      cursor: pointer;
+      padding: 6px;
+      border-radius: 8px;
+      background: var(--glass);
+      border: 1px solid var(--glass-border);
+      transition: 0.3s;
+    }
+
+    .hamburger span {
+      display: block;
+      width: 22px; height: 2px;
+      background: var(--white);
+      border-radius: 2px;
+      transition: all 0.35s cubic-bezier(0.4,0,0.2,1);
+    }
+
+    .hamburger.active span:nth-child(1) { transform: rotate(45deg) translate(5px, 5px); }
+    .hamburger.active span:nth-child(2) { opacity: 0; transform: scaleX(0); }
+    .hamburger.active span:nth-child(3) { transform: rotate(-45deg) translate(5px, -5px); }
+
+    /* Mobile Nav */
+    .mobile-nav {
+      display: none;
+      position: fixed;
+      inset: 72px 0 0 0;
+      background: rgba(10,14,20,0.98);
+      backdrop-filter: blur(20px);
+      z-index: 999;
+      padding: 20px clamp(16px, 5vw, 40px) 30px;
+      flex-direction: column;
+      gap: 4px;
+      overflow-y: auto;
+      border-top: 1px solid var(--glass-border);
+      transform: translateX(100%);
+      transition: transform 0.35s cubic-bezier(0.4,0,0.2,1);
+    }
+
+    .mobile-nav.open { transform: translateX(0); }
+
+    .mobile-nav a {
+      color: var(--text);
+      text-decoration: none;
+      font-size: 1rem;
+      font-weight: 500;
+      padding: 13px 16px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      border: 1px solid transparent;
+      transition: all 0.25s;
+    }
+
+    .mobile-nav a:hover { background: var(--teal-glow); border-color: rgba(0,201,167,0.2); color: var(--teal); }
+
+    .mobile-nav-cta {
+      margin-top: 16px;
+      background: linear-gradient(135deg, var(--teal), var(--teal-dark)) !important;
+      color: #fff !important;
+      justify-content: center;
+      font-weight: 700 !important;
+      font-size: 1rem !important;
+    }
+
+    .mobile-sub { padding-left: 20px; }
+    .mobile-sub a { font-size: 0.9rem !important; color: var(--muted) !important; }
+    .mobile-sub a:hover { color: var(--teal) !important; }
+
+    /* ── SECTIONS ── */
+    .section-wrap {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: var(--section-pad) clamp(16px, 4vw, 40px);
+    }
+
+    /* ── HERO ── */
+    #hero {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      padding-top: 72px;
+    }
+
+    .hero-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 60px clamp(16px, 4vw, 40px);
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 60px;
+      align-items: center;
+    }
+
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(0,201,167,0.1);
+      border: 1px solid rgba(0,201,167,0.25);
+      border-radius: 50px;
+      padding: 6px 16px;
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: var(--teal);
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      margin-bottom: 24px;
+    }
+
+    .hero-badge::before {
+      content: '';
+      width: 6px; height: 6px;
+      background: var(--teal);
+      border-radius: 50%;
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0%,100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.5; transform: scale(1.4); }
+    }
+
+    .hero-title {
+      font-size: clamp(2.2rem, 5vw, 3.8rem);
+      font-weight: 800;
+      line-height: 1.1;
+      margin-bottom: 20px;
+      letter-spacing: -0.02em;
+    }
+
+    .hero-title .accent { color: var(--teal); }
+
+    .hero-subtitle {
+      font-size: clamp(1rem, 2vw, 1.15rem);
+      color: var(--muted);
+      line-height: 1.7;
+      margin-bottom: 36px;
+      max-width: 500px;
+    }
+
+    .hero-ctas {
+      display: flex;
+      gap: 14px;
+      flex-wrap: wrap;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--teal), var(--teal-dark));
+      color: #fff;
+      padding: 14px 30px;
+      border-radius: 10px;
+      font-weight: 700;
+      font-size: 0.95rem;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.3s;
+      box-shadow: 0 0 30px rgba(0,201,167,0.3);
+      border: none;
+      cursor: pointer;
+    }
+
+    .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 0 40px rgba(0,201,167,0.5); }
+
+    .btn-secondary {
+      background: transparent;
+      color: var(--text);
+      padding: 14px 30px;
+      border-radius: 10px;
+      font-weight: 600;
+      font-size: 0.95rem;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      border: 1px solid var(--glass-border);
+      transition: all 0.3s;
+      cursor: pointer;
+    }
+
+    .btn-secondary:hover { border-color: var(--teal); color: var(--teal); background: var(--teal-glow); }
+
+    /* Hero Stats */
+    .hero-stats {
+      display: flex;
+      gap: 30px;
+      margin-top: 44px;
+      padding-top: 36px;
+      border-top: 1px solid var(--glass-border);
+      flex-wrap: wrap;
+    }
+
+    .stat { }
+    .stat-num {
+      font-family: 'Syne', sans-serif;
+      font-size: 1.9rem;
+      font-weight: 800;
+      color: var(--teal);
+      line-height: 1;
+    }
+    .stat-label {
+      font-size: 0.78rem;
+      color: var(--muted);
+      margin-top: 4px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    /* Hero Visual */
+    .hero-visual {
+      position: relative;
+    }
+
+    .hero-card-stack {
+      position: relative;
+    }
+
+    .hero-card {
+      background: var(--navy-card);
+      border: 1px solid var(--glass-border);
+      border-radius: 20px;
+      padding: 28px;
+      backdrop-filter: blur(10px);
+    }
+
+    .hero-card-main {
+      position: relative;
+      z-index: 2;
+    }
+
+    .hero-card-behind {
+      position: absolute;
+      width: 90%;
+      height: 100%;
+      top: -12px;
+      left: 5%;
+      background: rgba(0,201,167,0.06);
+      border: 1px solid rgba(0,201,167,0.15);
+      border-radius: 20px;
+      z-index: 1;
+    }
+
+    .course-preview-item {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 12px 0;
+      border-bottom: 1px solid var(--glass-border);
+    }
+
+    .course-preview-item:last-child { border-bottom: none; }
+
+    .course-icon {
+      width: 40px; height: 40px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      flex-shrink: 0;
+    }
+
+    .course-preview-item h4 {
+      font-size: 0.88rem;
+      font-weight: 600;
+      color: var(--text);
+    }
+
+    .course-preview-item p {
+      font-size: 0.75rem;
+      color: var(--muted);
+      margin-top: 2px;
+    }
+
+    .progress-bar-wrap {
+      height: 4px;
+      background: rgba(255,255,255,0.08);
+      border-radius: 2px;
+      margin-top: 6px;
+      overflow: hidden;
+    }
+
+    .progress-bar {
+      height: 100%;
+      border-radius: 2px;
+      background: linear-gradient(90deg, var(--teal), #0096ff);
+      transition: width 1.5s ease;
+    }
+
+    /* ── SECTION TITLES ── */
+    .section-eyebrow {
+      font-size: 0.72rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+      color: var(--teal);
+      margin-bottom: 10px;
+    }
+
+    .section-title {
+      font-size: clamp(1.7rem, 3.5vw, 2.6rem);
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      margin-bottom: 16px;
+    }
+
+    .section-subtitle {
+      font-size: clamp(0.9rem, 1.8vw, 1.05rem);
+      color: var(--muted);
+      max-width: 560px;
+      line-height: 1.7;
+    }
+
+    .section-header { margin-bottom: clamp(30px, 5vw, 56px); }
+
+    /* ── ABOUT ── */
+    #about { background: rgba(13,17,23,0.4); }
+
+    .about-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: clamp(30px, 5vw, 70px);
+      align-items: center;
+    }
+
+    .feature-list {
+      margin-top: 28px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .feature-item {
+      display: flex;
+      gap: 14px;
+      align-items: flex-start;
+    }
+
+    .feature-icon {
+      width: 36px; height: 36px;
+      border-radius: 9px;
+      background: var(--teal-glow);
+      border: 1px solid rgba(0,201,167,0.2);
+      display: flex; align-items: center; justify-content: center;
+      color: var(--teal);
+      font-size: 14px;
+      flex-shrink: 0;
+    }
+
+    .feature-item h4 { font-size: 0.92rem; font-weight: 600; margin-bottom: 2px; }
+    .feature-item p { font-size: 0.82rem; color: var(--muted); }
+
+    .about-visual {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+    }
+
+    .about-metric {
+      background: var(--navy-card);
+      border: 1px solid var(--glass-border);
+      border-radius: 16px;
+      padding: 24px 20px;
+      text-align: center;
+      backdrop-filter: blur(10px);
+      transition: all 0.3s;
+    }
+
+    .about-metric:hover { border-color: rgba(0,201,167,0.3); transform: translateY(-3px); }
+    .about-metric:first-child { grid-column: 1 / -1; }
+
+    .about-metric .num {
+      font-family: 'Syne', sans-serif;
+      font-size: 2.2rem;
+      font-weight: 800;
+      color: var(--teal);
+    }
+
+    .about-metric .label { font-size: 0.8rem; color: var(--muted); margin-top: 4px; }
+
+    /* ── COURSES ── */
+    .search-wrap {
+      position: relative;
+      max-width: 420px;
+      margin-bottom: 36px;
+    }
+
+    .search-wrap i {
+      position: absolute;
+      left: 16px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    #serviceSearch {
+      width: 100%;
+      background: var(--navy-card);
+      border: 1px solid var(--glass-border);
+      color: var(--text);
+      padding: 12px 16px 12px 42px;
+      border-radius: 10px;
+      font-size: 0.9rem;
+      font-family: 'DM Sans', sans-serif;
+      outline: none;
+      transition: border-color 0.25s;
+    }
+
+    #serviceSearch:focus { border-color: var(--teal); }
+
+    .services-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 20px;
+    }
+
+    .service-card {
+      background: var(--navy-card);
+      border: 1px solid var(--glass-border);
+      border-radius: 18px;
+      padding: clamp(20px, 3vw, 30px);
+      cursor: pointer;
+      transition: all 0.35s cubic-bezier(0.4,0,0.2,1);
+      backdrop-filter: blur(10px);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .service-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, var(--teal), transparent);
+      opacity: 0;
+      transition: opacity 0.35s;
+    }
+
+    .service-card:hover {
+      border-color: rgba(0,201,167,0.3);
+      transform: translateY(-6px);
+      box-shadow: 0 20px 40px rgba(0,0,0,0.4), 0 0 30px rgba(0,201,167,0.08);
+    }
+
+    .service-card:hover::before { opacity: 1; }
+
+    .service-card-icon {
+      width: 56px; height: 56px;
+      border-radius: 14px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 26px;
+      margin-bottom: 18px;
+    }
+
+    .service-card h3 {
+      font-size: 1.02rem;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+
+    .service-card p {
+      font-size: 0.82rem;
+      color: var(--muted);
+      line-height: 1.6;
+    }
+
+    .service-card-footer {
+      margin-top: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .course-tag {
+      font-size: 0.72rem;
+      font-weight: 600;
+      padding: 4px 10px;
+      border-radius: 50px;
+      background: var(--teal-glow);
+      color: var(--teal);
+      border: 1px solid rgba(0,201,167,0.2);
+    }
+
+    .enroll-arrow {
+      width: 32px; height: 32px;
+      border-radius: 8px;
+      background: var(--teal-glow);
+      border: 1px solid rgba(0,201,167,0.2);
+      display: flex; align-items: center; justify-content: center;
+      color: var(--teal);
+      font-size: 14px;
+      transition: all 0.25s;
+    }
+
+    .service-card:hover .enroll-arrow {
+      background: var(--teal);
+      color: #fff;
+      border-color: var(--teal);
+    }
+
+    /* ── TESTIMONIALS ── */
+    #testimonials { background: rgba(13,17,23,0.4); }
+
+    .testimonials-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 20px;
+    }
+
+    .testimonial-card {
+      background: var(--navy-card);
+      border: 1px solid var(--glass-border);
+      border-radius: 18px;
+      padding: clamp(20px, 3vw, 28px);
+      backdrop-filter: blur(10px);
+      transition: all 0.3s;
+      position: relative;
+    }
+
+    .testimonial-card:hover { border-color: rgba(0,201,167,0.2); transform: translateY(-4px); }
+
+    .quote-icon {
+      font-size: 2.5rem;
+      color: var(--teal);
+      line-height: 1;
+      margin-bottom: 14px;
+      opacity: 0.4;
+      font-family: Georgia, serif;
+    }
+
+    .testimonial-text {
+      font-size: 0.88rem;
+      line-height: 1.7;
+      color: var(--text);
+      margin-bottom: 20px;
+    }
+
+    .testimonial-author {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .author-avatar {
+      width: 40px; height: 40px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--teal), #0096ff);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 0.9rem;
+      font-family: 'Syne', sans-serif;
+      flex-shrink: 0;
+    }
+
+    .author-name { font-weight: 600; font-size: 0.88rem; }
+    .author-role { font-size: 0.75rem; color: var(--teal); }
+
+    .stars {
+      color: #fbbf24;
+      font-size: 0.78rem;
+      margin-top: 2px;
+    }
+
+    /* ── CONTACT ── */
+    .contact-grid {
+      display: grid;
+      grid-template-columns: 1fr 1.6fr;
+      gap: clamp(30px, 5vw, 60px);
+      align-items: start;
+    }
+
+    .contact-info { }
+
+    .contact-detail {
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+      margin-bottom: 24px;
+    }
+
+    .contact-detail-icon {
+      width: 40px; height: 40px;
+      border-radius: 10px;
+      background: var(--teal-glow);
+      border: 1px solid rgba(0,201,167,0.2);
+      display: flex; align-items: center; justify-content: center;
+      color: var(--teal);
+      font-size: 15px;
+      flex-shrink: 0;
+    }
+
+    .contact-detail h4 { font-size: 0.85rem; font-weight: 600; margin-bottom: 2px; }
+    .contact-detail p { font-size: 0.8rem; color: var(--muted); }
+
+    .contact-form-wrap {
+      background: var(--navy-card);
+      border: 1px solid var(--glass-border);
+      border-radius: 20px;
+      padding: clamp(20px, 3vw, 36px);
+      backdrop-filter: blur(10px);
+    }
+
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+    }
+
+    .form-group { margin-bottom: 16px; }
+
+    .form-group label {
+      display: block;
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      margin-bottom: 7px;
+    }
+
+    .form-group input,
+    .form-group textarea,
+    .form-group select {
+      width: 100%;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid var(--glass-border);
+      color: var(--text);
+      padding: 11px 14px;
+      border-radius: 10px;
+      font-size: 0.88rem;
+      font-family: 'DM Sans', sans-serif;
+      outline: none;
+      transition: border-color 0.25s, box-shadow 0.25s;
+      resize: vertical;
+    }
+
+    .form-group input:focus,
+    .form-group textarea:focus,
+    .form-group select:focus {
+      border-color: var(--teal);
+      box-shadow: 0 0 0 3px rgba(0,201,167,0.1);
+    }
+
+    .form-group select option { background: var(--navy); }
+
+    #formResponse {
+      font-size: 0.85rem;
+      font-weight: 500;
+      margin-top: 10px;
+    }
+
+    /* ── MODAL ── */
+    .modal {
+      display: none;
+      position: fixed;
+      inset: 0;
+      z-index: 9999;
+      background: rgba(0,0,0,0.85);
+      backdrop-filter: blur(6px);
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .modal.show { display: flex; }
+
+    .modal-content {
+      background: #111922;
+      border: 1px solid var(--glass-border);
+      border-radius: 20px;
+      padding: clamp(24px, 4vw, 40px);
+      width: 100%;
+      max-width: 480px;
+      position: relative;
+      animation: modalIn 0.35s cubic-bezier(0.4,0,0.2,1);
+    }
+
+    @keyframes modalIn {
+      from { opacity: 0; transform: scale(0.94) translateY(20px); }
+      to { opacity: 1; transform: scale(1) translateY(0); }
+    }
+
+    .modal-close {
+      position: absolute;
+      top: 16px; right: 16px;
+      width: 32px; height: 32px;
+      border-radius: 8px;
+      background: var(--glass);
+      border: 1px solid var(--glass-border);
+      color: var(--muted);
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer;
+      font-size: 16px;
+      transition: 0.25s;
+    }
+
+    .modal-close:hover { color: var(--white); background: var(--danger); border-color: var(--danger); }
+
+    .modal-badge {
+      display: inline-block;
+      background: var(--teal-glow);
+      border: 1px solid rgba(0,201,167,0.2);
+      color: var(--teal);
+      padding: 4px 12px;
+      border-radius: 50px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      margin-bottom: 16px;
+    }
+
+    .modal h2 {
+      font-size: 1.4rem;
+      margin-bottom: 6px;
+    }
+
+    .modal p.sub { font-size: 0.82rem; color: var(--muted); margin-bottom: 24px; }
+
+    #regResponse {
+      font-size: 0.85rem;
+      font-weight: 500;
+      margin-top: 10px;
+    }
+
+    /* ── FOOTER ── */
+    footer {
+      border-top: 1px solid var(--glass-border);
+      padding: clamp(30px, 5vw, 60px) clamp(16px, 4vw, 40px) 30px;
+    }
+
+    .footer-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .footer-top {
+      display: grid;
+      grid-template-columns: 1.5fr 1fr 1fr 1fr;
+      gap: clamp(20px, 4vw, 50px);
+      margin-bottom: 40px;
+      padding-bottom: 40px;
+      border-bottom: 1px solid var(--glass-border);
+    }
+
+    .footer-brand p {
+      font-size: 0.82rem;
+      color: var(--muted);
+      line-height: 1.7;
+      margin-top: 14px;
+      margin-bottom: 20px;
+    }
+
+    .social-links {
+      display: flex;
+      gap: 10px;
+    }
+
+    .social-link {
+      width: 36px; height: 36px;
+      border-radius: 9px;
+      background: var(--glass);
+      border: 1px solid var(--glass-border);
+      display: flex; align-items: center; justify-content: center;
+      color: var(--muted);
+      font-size: 14px;
+      text-decoration: none;
+      transition: all 0.25s;
+    }
+
+    .social-link:hover { background: var(--teal-glow); border-color: rgba(0,201,167,0.3); color: var(--teal); }
+
+    .footer-col h4 {
+      font-size: 0.82rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--muted);
+      margin-bottom: 16px;
+    }
+
+    .footer-col ul { list-style: none; }
+    .footer-col ul li { margin-bottom: 10px; }
+    .footer-col ul a {
+      text-decoration: none;
+      font-size: 0.85rem;
+      color: rgba(255,255,255,0.6);
+      transition: color 0.25s;
+    }
+    .footer-col ul a:hover { color: var(--teal); }
+
+    .footer-bottom {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .footer-bottom p { font-size: 0.8rem; color: var(--muted); }
+
+    /* ── ANIMATIONS ── */
+    .fade-up {
+      opacity: 0;
+      transform: translateY(30px);
+      transition: opacity 0.7s ease, transform 0.7s ease;
+    }
+    .fade-up.visible { opacity: 1; transform: translateY(0); }
+
+    .stagger > * { transition-delay: calc(var(--i, 0) * 0.1s); }
+
+    /* ── SCROLL INDICATOR ── */
+    .scroll-indicator {
+      position: absolute;
+      bottom: 40px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      color: var(--muted);
+      font-size: 0.72rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      animation: bounce 2s infinite;
+    }
+
+    @keyframes bounce {
+      0%,100% { transform: translateX(-50%) translateY(0); }
+      50% { transform: translateX(-50%) translateY(6px); }
+    }
+
+    /* ── GLOW DOTS ── */
+    .glow-dot {
+      position: fixed;
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: -1;
+      filter: blur(80px);
+      opacity: 0.12;
+    }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 1024px) {
+      .hero-inner { grid-template-columns: 1fr; gap: 50px; }
+      .hero-visual { order: -1; }
+      .hero-title { font-size: clamp(2rem, 5vw, 3rem); }
+      .about-grid { grid-template-columns: 1fr; }
+      .about-visual { order: -1; }
+      .contact-grid { grid-template-columns: 1fr; }
+      .footer-top { grid-template-columns: 1fr 1fr; }
+    }
+
+    @media (max-width: 768px) {
+      .nav-links { display: none; }
+      .hamburger { display: flex; }
+      .mobile-nav { display: flex; }
+
+      .hero-inner { padding-top: 40px; }
+      .form-row { grid-template-columns: 1fr; }
+      .footer-top { grid-template-columns: 1fr; }
+      .hero-stats { gap: 20px; }
+      .services-grid { grid-template-columns: 1fr; }
+      .about-visual { grid-template-columns: 1fr 1fr; }
+    }
+
+    @media (max-width: 480px) {
+      :root { --section-pad: 32px; }
+      .hero-ctas { flex-direction: column; }
+      .btn-primary, .btn-secondary { justify-content: center; width: 100%; }
+      .about-visual { grid-template-columns: 1fr; }
+      .about-metric:first-child { grid-column: 1; }
+      .testimonials-grid { grid-template-columns: 1fr; }
+      .footer-bottom { flex-direction: column; text-align: center; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- BG -->
+  <video autoplay muted loop playsinline id="bg-video">
+    <source src="https://cdn.videvo.net/videvo_files/video/free/2019-07/small_watermarked/190712_04_Bokeh_4k_021_preview.webm" type="video/webm" />
+    <source src="https://cdn.videvo.net/videvo_files/video/free/2019-07/small_watermarked/190712_04_Bokeh_4k_021_preview.mp4" type="video/mp4" />
+  </video>
+  <div class="bg-overlay"></div>
+
+  <!-- Glow dots -->
+  <div class="glow-dot" style="width:600px;height:600px;background:var(--teal);top:-200px;right:-100px;"></div>
+  <div class="glow-dot" style="width:500px;height:500px;background:#0066ff;bottom:-100px;left:-150px;"></div>
+
+  <!-- ── NAVBAR ── -->
+  <nav class="navbar">
+    <div class="nav-container">
+      <a href="#hero" class="logo">
+        <div class="logo-icon"><i class="fas fa-bolt" style="color:#fff"></i></div>
+        <div class="logo-text">DATARITE<br><span>TECH</span></div>
+      </a>
+
+      <ul class="nav-links">
+        <li><a href="#hero"><i class="fas fa-home" style="margin-right:6px;font-size:0.8em;opacity:0.6"></i>Home</a></li>
+        <li class="dropdown">
+          <a href="#">Courses <i class="fas fa-chevron-down" style="font-size:0.7em;margin-left:4px;opacity:0.6"></i></a>
+          <ul class="dropdown-menu">
+            <li><a href="#services"><i class="fas fa-code" style="width:18px;color:var(--teal)"></i> Full Stack</a></li>
+            <li><a href="#services"><i class="fas fa-brain" style="width:18px;color:var(--teal)"></i> AI & ML</a></li>
+            <li><a href="#services"><i class="fas fa-cloud" style="width:18px;color:var(--teal)"></i> Cloud</a></li>
+            <li><a href="#services"><i class="fas fa-shield-alt" style="width:18px;color:var(--teal)"></i> Cybersecurity</a></li>
+          </ul>
+        </li>
+        <li><a href="#about">About</a></li>
+        <li><a href="#testimonials">Reviews</a></li>
+        <li><a href="#contact">Contact</a></li>
+        <li><a href="#services" class="nav-cta">Enroll Now <i class="fas fa-arrow-right" style="font-size:0.8em"></i></a></li>
+      </ul>
+
+      <button class="hamburger" id="hamburger" aria-label="Menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </nav>
+
+  <!-- Mobile Nav -->
+  <nav class="mobile-nav" id="mobileNav">
+    <a href="#hero" onclick="closeMenu()"><i class="fas fa-home" style="color:var(--teal)"></i> Home</a>
+    <a href="#about" onclick="closeMenu()"><i class="fas fa-users" style="color:var(--teal)"></i> About Us</a>
+    <div class="mobile-sub">
+      <a href="#services" onclick="closeMenu()"><i class="fas fa-code" style="color:var(--teal)"></i> Full Stack</a>
+      <a href="#services" onclick="closeMenu()"><i class="fas fa-brain" style="color:var(--teal)"></i> AI & ML</a>
+      <a href="#services" onclick="closeMenu()"><i class="fas fa-cloud" style="color:var(--teal)"></i> Cloud</a>
+      <a href="#services" onclick="closeMenu()"><i class="fas fa-shield-alt" style="color:var(--teal)"></i> Cybersecurity</a>
+    </div>
+    <a href="#testimonials" onclick="closeMenu()"><i class="fas fa-star" style="color:var(--teal)"></i> Reviews</a>
+    <a href="#contact" onclick="closeMenu()"><i class="fas fa-envelope" style="color:var(--teal)"></i> Contact</a>
+    <a href="#services" class="mobile-nav-cta" onclick="closeMenu()"><i class="fas fa-rocket"></i> Enroll Now — Free Trial</a>
+  </nav>
+
+  <!-- ── HERO ── -->
+  <section id="hero">
+    <div class="hero-inner">
+      <div class="hero-content fade-up">
+        <div class="hero-badge">🎓 #1 Rated IT Training Institute in Hyderabad</div>
+        <h1 class="hero-title">Launch Your<br><span class="accent">Tech Career</span><br>The Smart Way</h1>
+        <p class="hero-subtitle">Industry-aligned training in Full Stack, AI & ML, Cloud, and Cybersecurity. Learn from practitioners, build real projects, get hired.</p>
+        <div class="hero-ctas">
+          <a href="#services" class="btn-primary"><i class="fas fa-rocket"></i> Explore Courses</a>
+          <a href="#about" class="btn-secondary"><i class="fas fa-play-circle"></i> Watch Demo</a>
+        </div>
+        <div class="hero-stats">
+          <div class="stat"><div class="stat-num">5K+</div><div class="stat-label">Students Placed</div></div>
+          <div class="stat"><div class="stat-num">98%</div><div class="stat-label">Placement Rate</div></div>
+          <div class="stat"><div class="stat-num">50+</div><div class="stat-label">Partner Companies</div></div>
+          <div class="stat"><div class="stat-num">8+</div><div class="stat-label">Years Experience</div></div>
+        </div>
+      </div>
+
+      <div class="hero-visual fade-up" style="transition-delay:0.2s">
+        <div class="hero-card-stack">
+          <div class="hero-card-behind"></div>
+          <div class="hero-card hero-card-main">
+            <div style="display:flex;align-items:center;gap:10px;margin-bottom:20px;">
+              <div style="font-family:'Syne',sans-serif;font-weight:700;font-size:0.9rem;">Popular Courses</div>
+              <div style="margin-left:auto;font-size:0.72rem;color:var(--teal);font-weight:600;">Live Enrollment</div>
+              <div style="width:8px;height:8px;border-radius:50%;background:var(--teal);animation:pulse 2s infinite;"></div>
+            </div>
+            <div class="course-preview-item">
+              <div class="course-icon" style="background:rgba(99,102,241,0.15);">🧑‍💻</div>
+              <div style="flex:1;">
+                <h4>Full Stack Development</h4>
+                <p>React · Node.js · MongoDB</p>
+                <div class="progress-bar-wrap"><div class="progress-bar" style="width:88%"></div></div>
+              </div>
+              <div style="font-size:0.78rem;color:var(--teal);font-weight:700;">88%</div>
+            </div>
+            <div class="course-preview-item">
+              <div class="course-icon" style="background:rgba(0,201,167,0.1);">🤖</div>
+              <div style="flex:1;">
+                <h4>AI & Machine Learning</h4>
+                <p>Python · TensorFlow · LLMs</p>
+                <div class="progress-bar-wrap"><div class="progress-bar" style="width:72%"></div></div>
+              </div>
+              <div style="font-size:0.78rem;color:var(--teal);font-weight:700;">72%</div>
+            </div>
+            <div class="course-preview-item">
+              <div class="course-icon" style="background:rgba(0,102,255,0.1);">☁️</div>
+              <div style="flex:1;">
+                <h4>Cloud Computing</h4>
+                <p>AWS · Azure · DevOps</p>
+                <div class="progress-bar-wrap"><div class="progress-bar" style="width:55%"></div></div>
+              </div>
+              <div style="font-size:0.78rem;color:var(--teal);font-weight:700;">55%</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="scroll-indicator">
+      <span>Scroll</span>
+      <i class="fas fa-chevron-down" style="font-size:10px"></i>
+    </div>
+  </section>
+
+  <!-- ── ABOUT ── -->
+  <section id="about">
+    <div class="section-wrap">
+      <div class="about-grid">
+        <div class="fade-up">
+          <div class="section-eyebrow">About Us</div>
+          <h2 class="section-title">Bridging Education<br>& Real-World IT</h2>
+          <p class="section-subtitle">DATARITE TECH SOFT SOLUTIONS has been transforming careers for over 8 years, delivering immersive, project-based training that gets you hired.</p>
+          <div class="feature-list stagger">
+            <div class="feature-item" style="--i:0">
+              <div class="feature-icon"><i class="fas fa-laptop-code"></i></div>
+              <div><h4>Hands-On Projects</h4><p>Build a portfolio that impresses recruiters — real apps, real problems.</p></div>
+            </div>
+            <div class="feature-item" style="--i:1">
+              <div class="feature-icon"><i class="fas fa-user-tie"></i></div>
+              <div><h4>Industry Mentors</h4><p>Learn from engineers at top tech companies with years of production experience.</p></div>
+            </div>
+            <div class="feature-item" style="--i:2">
+              <div class="feature-icon"><i class="fas fa-briefcase"></i></div>
+              <div><h4>Placement Support</h4><p>Resume reviews, mock interviews, and direct connections to hiring partners.</p></div>
+            </div>
+            <div class="feature-item" style="--i:3">
+              <div class="feature-icon"><i class="fas fa-certificate"></i></div>
+              <div><h4>Industry Certifications</h4><p>Earn certifications recognized globally by leading tech companies.</p></div>
+            </div>
+          </div>
+        </div>
+        <div class="about-visual fade-up" style="transition-delay:0.2s">
+          <div class="about-metric">
+            <div class="num">⭐ 4.9/5</div>
+            <div class="label">Average Student Rating</div>
+          </div>
+          <div class="about-metric">
+            <div class="num">5,000+</div>
+            <div class="label">Graduates Placed</div>
+          </div>
+          <div class="about-metric">
+            <div class="num">50+</div>
+            <div class="label">Hiring Partners</div>
+          </div>
+          <div class="about-metric">
+            <div class="num">8 Yrs</div>
+            <div class="label">Training Excellence</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── COURSES ── -->
+  <section id="services">
+    <div class="section-wrap">
+      <div class="section-header fade-up">
+        <div class="section-eyebrow">Our Courses</div>
+        <h2 class="section-title">Learn In-Demand Skills</h2>
+        <p class="section-subtitle">Comprehensive, job-ready curricula built with industry partners and updated quarterly.</p>
+      </div>
+      <div class="search-wrap fade-up">
+        <i class="fas fa-search"></i>
+        <input type="text" id="serviceSearch" placeholder="Search courses…">
+      </div>
+      <div class="services-grid" id="servicesContainer"></div>
+    </div>
+  </section>
+
+  <!-- ── TESTIMONIALS ── -->
+  <section id="testimonials">
+    <div class="section-wrap">
+      <div class="section-header fade-up">
+        <div class="section-eyebrow">Student Stories</div>
+        <h2 class="section-title">Hear From Our Graduates</h2>
+        <p class="section-subtitle">Real outcomes. Real careers. Real people who made the leap.</p>
+      </div>
+      <div class="testimonials-grid stagger" id="testimonialsContainer"></div>
+    </div>
+  </section>
+
+  <!-- ── CONTACT ── -->
+  <section id="contact">
+    <div class="section-wrap">
+      <div class="section-header fade-up">
+        <div class="section-eyebrow">Contact Us</div>
+        <h2 class="section-title">Let's Talk</h2>
+        <p class="section-subtitle">Have questions? Our team is ready to help you pick the right course and start your journey.</p>
+      </div>
+      <div class="contact-grid">
+        <div class="contact-info fade-up">
+          <div class="contact-detail">
+            <div class="contact-detail-icon"><i class="fas fa-map-marker-alt"></i></div>
+            <div><h4>Location</h4><p>KPHB Colony, Hyderabad,<br>Telangana — 500085</p></div>
+          </div>
+          <div class="contact-detail">
+            <div class="contact-detail-icon"><i class="fas fa-phone"></i></div>
+            <div><h4>Phone</h4><p>+91 98765 43210</p></div>
+          </div>
+          <div class="contact-detail">
+            <div class="contact-detail-icon"><i class="fas fa-envelope"></i></div>
+            <div><h4>Email</h4><p>info@dataritetech.com</p></div>
+          </div>
+          <div class="contact-detail">
+            <div class="contact-detail-icon"><i class="fas fa-clock"></i></div>
+            <div><h4>Hours</h4><p>Mon–Sat: 9am – 7pm<br>Sun: 10am – 2pm</p></div>
+          </div>
+        </div>
+
+        <div class="contact-form-wrap fade-up" style="transition-delay:0.2s">
+          <h3 style="font-size:1.1rem;margin-bottom:20px;">Send a Message</h3>
+          <form id="contactForm">
+            <div class="form-row">
+              <div class="form-group">
+                <label>Your Name</label>
+                <input type="text" id="name" placeholder="Ravi Kumar" required>
+              </div>
+              <div class="form-group">
+                <label>Email Address</label>
+                <input type="email" id="email" placeholder="ravi@example.com" required>
+              </div>
+            </div>
+            <div class="form-group">
+              <label>Interested In</label>
+              <select id="interest">
+                <option value="">Select a course…</option>
+                <option>Full Stack Web Development</option>
+                <option>AI & Machine Learning</option>
+                <option>Cloud Computing</option>
+                <option>Cyber Security</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Message</label>
+              <textarea id="message" rows="4" placeholder="Tell us about your goals…" required></textarea>
+            </div>
+            <button type="submit" class="btn-primary" style="width:100%;justify-content:center;font-size:0.95rem;">
+              <i class="fas fa-paper-plane"></i> Send Message
+            </button>
+            <p id="formResponse"></p>
+          </form>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── FOOTER ── -->
+  <footer>
+    <div class="footer-inner">
+      <div class="footer-top">
+        <div class="footer-brand">
+          <div class="logo">
+            <div class="logo-icon"><i class="fas fa-bolt" style="color:#fff"></i></div>
+            <div class="logo-text">DATARITE <span>TECH</span></div>
+          </div>
+          <p>Empowering the next generation of tech professionals with hands-on, industry-aligned training since 2016.</p>
+          <div class="social-links">
+            <a href="#" class="social-link"><i class="fab fa-linkedin-in"></i></a>
+            <a href="#" class="social-link"><i class="fab fa-twitter"></i></a>
+            <a href="#" class="social-link"><i class="fab fa-instagram"></i></a>
+            <a href="#" class="social-link"><i class="fab fa-youtube"></i></a>
+          </div>
+        </div>
+        <div class="footer-col">
+          <h4>Courses</h4>
+          <ul>
+            <li><a href="#services">Full Stack Dev</a></li>
+            <li><a href="#services">AI & Machine Learning</a></li>
+            <li><a href="#services">Cloud Computing</a></li>
+            <li><a href="#services">Cyber Security</a></li>
+            <li><a href="#services">Data Science</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Company</h4>
+          <ul>
+            <li><a href="#about">About Us</a></li>
+            <li><a href="#testimonials">Success Stories</a></li>
+            <li><a href="#contact">Careers</a></li>
+            <li><a href="#contact">Blog</a></li>
+            <li><a href="#contact">Press Kit</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Support</h4>
+          <ul>
+            <li><a href="#contact">Contact Us</a></li>
+            <li><a href="#">FAQ</a></li>
+            <li><a href="#">Student Portal</a></li>
+            <li><a href="#">Privacy Policy</a></li>
+            <li><a href="#">Terms of Service</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>© 2025 DATARITE TECH SOFT SOLUTIONS. All rights reserved.</p>
+        <p style="color:var(--teal);font-size:0.75rem;">Made with ❤️ in Hyderabad</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ── MODAL ── -->
+  <div id="registrationModal" class="modal">
+    <div class="modal-content">
+      <button class="modal-close" id="modalClose"><i class="fas fa-times"></i></button>
+      <div class="modal-badge">🎓 Course Enrollment</div>
+      <h2>Register Now</h2>
+      <p class="sub">Secure your spot in <strong id="courseTitle"></strong></p>
+      <form id="registrationForm">
+        <input type="hidden" id="selectedCourse">
+        <div class="form-group">
+          <label>Full Name</label>
+          <input type="text" id="regName" placeholder="Your full name" required>
+        </div>
+        <div class="form-group">
+          <label>Email Address</label>
+          <input type="email" id="regEmail" placeholder="your@email.com" required>
+        </div>
+        <div class="form-group">
+          <label>Phone Number</label>
+          <input type="tel" id="regPhone" placeholder="+91 98765 43210">
+        </div>
+        <button type="submit" class="btn-primary" style="width:100%;justify-content:center;">
+          <i class="fas fa-check-circle"></i> Complete Registration
+        </button>
+        <p id="regResponse"></p>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    // ── DATA ──
+    const courses = [
+      {
+        title: "Full Stack Web Development",
+        description: "Master React, Node.js, and MongoDB. Build production-ready web applications end-to-end.",
+        emoji: "🧑‍💻",
+        color: "rgba(99,102,241,0.15)",
+        tag: "12 Weeks",
+        level: "Beginner–Advanced"
+      },
+      {
+        title: "AI & Machine Learning",
+        description: "Deep dive into Python, TensorFlow, and Large Language Models. Build intelligent systems.",
+        emoji: "🤖",
+        color: "rgba(0,201,167,0.12)",
+        tag: "16 Weeks",
+        level: "Intermediate"
+      },
+      {
+        title: "Cloud Computing",
+        description: "AWS, Azure, and GCP. Architect, deploy, and scale cloud-native applications.",
+        emoji: "☁️",
+        color: "rgba(0,102,255,0.12)",
+        tag: "10 Weeks",
+        level: "All Levels"
+      },
+      {
+        title: "Cyber Security",
+        description: "Ethical hacking, penetration testing, and secure architecture. Protect systems at scale.",
+        emoji: "🔐",
+        color: "rgba(255,77,109,0.1)",
+        tag: "14 Weeks",
+        level: "Intermediate"
+      }
+    ];
+
+    const testimonials = [
+      { name: "Sarah K.", role: "Full Stack Developer @ TCS", text: "DATARITE TECH completely changed my career trajectory. The hands-on projects and mentorship gave me the confidence to crack my dream job in just 4 months after completing the course.", rating: 5, initials: "SK" },
+      { name: "James R.", role: "ML Engineer @ Wipro", text: "The AI & ML course was incredibly practical. I went from knowing Python basics to building production ML pipelines. The instructors have real industry experience, and it shows.", rating: 5, initials: "JR" },
+      { name: "Priya M.", role: "Cloud Architect @ Infosys", text: "Best investment I've made in my career. The cloud course curriculum is up-to-date with what companies actually use in 2024. Got AWS certified AND placed within 6 weeks.", rating: 5, initials: "PM" },
+      { name: "Arjun S.", role: "Security Analyst @ Deloitte", text: "The cybersecurity course was thorough and engaging. Real-world labs, CTF challenges, and an amazing peer community. My salary doubled post-completion.", rating: 5, initials: "AS" }
+    ];
+
+    // ── RENDER COURSES ──
+    function renderCourses(filter = "") {
+      const container = document.getElementById('servicesContainer');
+      const filtered = courses.filter(c => c.title.toLowerCase().includes(filter.toLowerCase()) || c.description.toLowerCase().includes(filter.toLowerCase()));
+      container.innerHTML = filtered.length ? filtered.map(c => `
+        <div class="service-card fade-up" onclick="openModal('${c.title}')">
+          <div class="service-card-icon" style="background:${c.color}">${c.emoji}</div>
+          <h3>${c.title}</h3>
+          <p>${c.description}</p>
+          <div class="service-card-footer">
+            <div style="display:flex;gap:8px;flex-wrap:wrap;">
+              <span class="course-tag">${c.tag}</span>
+              <span class="course-tag" style="background:rgba(255,255,255,0.04);color:var(--muted);border-color:var(--glass-border)">${c.level}</span>
+            </div>
+            <div class="enroll-arrow"><i class="fas fa-arrow-right"></i></div>
+          </div>
+        </div>
+      `).join('') : `<p style="color:var(--muted);grid-column:1/-1">No courses found. Try a different search.</p>`;
+
+      // re-observe new elements
+      document.querySelectorAll('.fade-up:not(.visible)').forEach(el => observer.observe(el));
+    }
+
+    // ── RENDER TESTIMONIALS ──
+    function renderTestimonials() {
+      const container = document.getElementById('testimonialsContainer');
+      container.innerHTML = testimonials.map((t, i) => `
+        <div class="testimonial-card fade-up" style="--i:${i}">
+          <div class="quote-icon">"</div>
+          <p class="testimonial-text">${t.text}</p>
+          <div class="testimonial-author">
+            <div class="author-avatar">${t.initials}</div>
+            <div>
+              <div class="author-name">${t.name}</div>
+              <div class="author-role">${t.role}</div>
+              <div class="stars">${'★'.repeat(t.rating)}</div>
+            </div>
+          </div>
+        </div>
+      `).join('');
+      document.querySelectorAll('.fade-up:not(.visible)').forEach(el => observer.observe(el));
+    }
+
+    // ── MODAL ──
+    function openModal(title) {
+      document.getElementById('courseTitle').textContent = title;
+      document.getElementById('selectedCourse').value = title;
+      document.getElementById('regResponse').textContent = '';
+      document.getElementById('registrationForm').reset();
+      document.getElementById('selectedCourse').value = title;
+      document.getElementById('registrationModal').classList.add('show');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeModal() {
+      document.getElementById('registrationModal').classList.remove('show');
+      document.body.style.overflow = '';
+    }
+
+    document.getElementById('modalClose').addEventListener('click', closeModal);
+    document.getElementById('registrationModal').addEventListener('click', e => { if (e.target === e.currentTarget) closeModal(); });
+
+    document.getElementById('registrationForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      const name = this.regName.value.trim();
+      const el = document.getElementById('regResponse');
+      el.style.color = 'var(--teal)';
+      el.textContent = `✅ Welcome ${name}! You're enrolled. We'll email you next steps shortly.`;
+      setTimeout(() => { closeModal(); this.reset(); }, 2500);
+    });
+
+    // ── CONTACT FORM ──
+    document.getElementById('contactForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      const name = this.name.value.trim();
+      const el = document.getElementById('formResponse');
+      el.style.color = 'var(--teal)';
+      el.textContent = `✅ Thanks ${name}! We'll get back to you within 24 hours.`;
+      setTimeout(() => { el.textContent = ''; this.reset(); }, 3000);
+    });
+
+    // ── SEARCH ──
+    document.getElementById('serviceSearch').addEventListener('input', e => renderCourses(e.target.value));
+
+    // ── HAMBURGER ──
+    const hamburger = document.getElementById('hamburger');
+    const mobileNav = document.getElementById('mobileNav');
+
+    hamburger.addEventListener('click', () => {
+      hamburger.classList.toggle('active');
+      mobileNav.classList.toggle('open');
+      document.body.style.overflow = mobileNav.classList.contains('open') ? 'hidden' : '';
+    });
+
+    function closeMenu() {
+      hamburger.classList.remove('active');
+      mobileNav.classList.remove('open');
+      document.body.style.overflow = '';
+    }
+
+    // ── NAVBAR SCROLL ──
+    window.addEventListener('scroll', () => {
+      document.querySelector('.navbar').classList.toggle('scrolled', window.scrollY > 30);
+    });
+
+    // ── SCROLL ANIMATIONS ──
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); } });
+    }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+
+    document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
+
+    // ── INIT ──
+    renderCourses();
+    renderTestimonials();
+
+    // Animate progress bars on scroll
+    const progressObserver = new IntersectionObserver(entries => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          e.target.querySelectorAll('.progress-bar').forEach(bar => {
+            bar.style.width = bar.style.width;
+          });
+        }
+      });
+    }, { threshold: 0.3 });
+
+    document.querySelectorAll('.hero-card-main').forEach(el => progressObserver.observe(el));
+  </script>
+</body>
+</html>
